@@ -15,24 +15,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const main_1 = __importDefault(require("../main"));
 const request = (0, supertest_1.default)(main_1.default);
-describe("Main endpoint", () => {
-    it('GET /', () => __awaiter(void 0, void 0, void 0, function* () {
-        return yield request.get("/").expect(200);
-    }));
-});
-describe("API endpoint", () => {
-    it("GET /api", () => __awaiter(void 0, void 0, void 0, function* () {
-        return yield request.get("/api").expect(200);
-    }));
-});
-describe("Image endpoint", () => {
-    it('returns an image', () => __awaiter(void 0, void 0, void 0, function* () {
-        return yield request.get("/api/resize?file=fjord&width=200&height=400").expect(200);
-    }));
-});
+it('GET /', () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield request.get("/");
+    expect(response.status).toEqual(200);
+}));
+it("GET /api", () => __awaiter(void 0, void 0, void 0, function* () {
+    return yield request.get("/api").expect(200);
+}));
 describe("File not found", () => {
     it('returns 400', () => __awaiter(void 0, void 0, void 0, function* () {
         return yield request.get("/api/resize/?file=test&width=200&height=200").expect(400);
+    }));
+});
+describe("Image endpoints", () => {
+    it('returns an image', () => __awaiter(void 0, void 0, void 0, function* () {
+        return yield request.get("/api/resize/?file=fjord&width=200&height=400").expect(200);
     }));
 });
 describe("Invalid width(NaN)", () => {

@@ -14,41 +14,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
+const fs_1 = require("fs");
 const sharp_1 = __importDefault(require("sharp"));
 const image = express_1.default.Router();
-image.get('/', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    const width = parseInt(request.query.width);
-    const height = parseInt(request.query.height);
-    const file = request.query.file;
-    const imagePath = path_1.default.resolve(__dirname, "../../", "assets");
-    const resizedPath = path_1.default.resolve(__dirname, "../../", "assets", "resized");
+image.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const width = parseInt(req.query.width);
+    const height = parseInt(req.query.height);
+    const file = req.query.file;
+    const imagePath = path_1.default.resolve("assets");
+    console.log(imagePath);
+    const resizedPath = path_1.default.resolve("assets", "resized");
     const resizedImage = `${resizedPath}/${file}_${width}_${height}.jpg`;
     // * response.status(200).sendFile(`${imagePath}/${file}.jpg`);
     // * response.status(200).send(`${imagePath}/${file}_${width}_${height}`);
     // * response.status(200).send(`${imagePath}/${file}.jpg`);
     if (!width || width <= 0) {
-        return response.status(400).send("Invalid width");
+        return res.status(400).send("Invalid width");
     }
     else if (!height || height <= 0) {
-        return response.status(400).send("Invalid height");
+        return res.status(400).send("Invalid height");
     }
     else if (!file) {
-        return response.status(400).send("file mustn't be empty");
+        return res.status(400).send("file mustn't be empty");
     }
-    else if (!(fs_1.default.existsSync(`${imagePath}/${file}.jpg`)) &&
-        !(fs_1.default.existsSync(`${resizedPath}/${file}_${width}_${height}.jpg`))) {
-        return response.status(400).send("File does not exist");
+    else if (!(`${file}.jpg` in (yield fs_1.promises.readdir(`${imagePath}`)))) {
+        return res.status(400).send("File does not exist");
     }
-    // ? path.resolve(__dirname, "assets")
-    if (fs_1.default.existsSync(resizedImage)) {
-        return response.status(200).sendFile(resizedImage);
+    if (!(`${file}_${width}_${height}.jpg` in (yield fs_1.promises.readdir(resizedPath)))) {
+        yield resize(imagePath, file, width, height, resizedImage);
     }
-    else {
-        (0, sharp_1.default)(`${imagePath}/${file}.jpg`)
-            .resize({ width, height })
-            .toFile(resizedImage)
-            .then(data => { response.status(200).sendFile(data.toString()); });
-    }
+    res.status(200).sendFile(resizedImage);
 }));
+function resize(imagePath, file, width, height, resizedImage) {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield (0, sharp_1.default)(`${imagePath}/${file}.jpg`)
+            .resize(width, height)
+            .toFile(resizedImage);
+        // .then(data => { res.status(200).sendFile(data.toString()) })
+    });
+}
 exports.default = image;

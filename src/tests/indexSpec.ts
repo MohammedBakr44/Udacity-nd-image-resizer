@@ -3,27 +3,25 @@ import app from "../main";
 
 const request = supertest(app);
 
-describe("Main endpoint", () => {
-    it('GET /', async () => {
-        return await request.get("/").expect(200);
-    })
+it('GET /', async () => {
+
+    const response = await request.get("/");
+    expect(response.status).toEqual(200);
 })
 
-describe("API endpoint", () => {
-    it("GET /api", async () => {
-        return await request.get("/api").expect(200);
-    })
-})
-
-describe("Image endpoint", () => {
-    it('returns an image', async () => {
-        return await request.get("/api/resize/?file=fjord&width=200&height=400").expect(200);
-    })
+it("GET /api", async () => {
+    return await request.get("/api").expect(200);
 })
 
 describe("File not found", () => {
     it('returns 400', async () => {
         return await request.get("/api/resize/?file=test&width=200&height=200").expect(400);
+    })
+})
+
+describe("Image endpoints", () => {
+    it('returns an image', async () => {
+        return await request.get("/api/resize/?file=fjord&width=200&height=400").expect(200);
     })
 })
 
