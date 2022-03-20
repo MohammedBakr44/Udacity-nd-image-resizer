@@ -1,7 +1,16 @@
 import supertest from 'supertest';
 import app from "../main";
+import resize from '../util/resize';
+import path from 'path';
+import fs from 'fs';
 
 const request = supertest(app);
+const testImagePath = path.resolve("assets");
+const testFile = "fjord";
+const testWidth = 200;
+const testHeight = 400;
+const testResizedPath = path.resolve("assets", "resized");
+const testResizedImage = `${testResizedPath}/${testFile}_${testWidth}_${testHeight}.jpg`;
 
 it('GET /', async () => {
     const response = await request.get("/");
@@ -15,40 +24,48 @@ it("GET /api", async () => {
 
 describe("File not found", () => {
     it('returns 400', async () => {
-        const response = await request.get("/api/resize/?file=test&width=200&height=200");
+        const response = await request.get(`/api/resize/?file=test&width=${testWidth}&height=${testHeight}`);
         expect(response.status).toEqual(400);
     })
 })
 
 describe("Image endpoints", () => {
     it('returns an image', async () => {
-        const response = await request.get("/api/resize/?file=fjord&width=200&height=400");
-        expect(response.status).toEqual(400);
+        const response = await request.get(`/api/resize/?file=fjord&width=${testWidth}&height=${testHeight}`);
+        expect(response.status).toEqual(200);
     })
 })
 
 describe("Invalid width(NaN)", () => {
     it('returns 400 and Invalid width', async () => {
-        return await request.get("/api/resize/?file=fjord&width=n&height=200").expect(400);
+        return await request.get(`/api/resize/?file=fjord&width=n&height=${testHeight}`).expect(400);
     })
 })
 
 
 describe("Invalid width(negative number)", () => {
     it('returns 400 and Invalid width', async () => {
-        return await request.get("/api/resize/?file=fjord&width=-1&height=200").expect(400);
+        return await request.get(`/api/resize/?file=fjord&width=-1&height=${testHeight}`).expect(400);
     })
 })
 
 describe("Invalid height(NaN)", () => {
     it('returns 400 and Invalid height', async () => {
-        return await request.get("/api/resize/?file=fjord&width=200&height=t").expect(400);
+        return await request.get(`/api/resize/?file=fjord&width=${testWidth}&height=t`).expect(400);
     })
 })
 
 
 describe("Invalid height(negative number)", () => {
     it('returns 400 and Invalid height', async () => {
-        return await request.get("/api/resize/?file=fjord&width=200&height=-1").expect(400);
+        return await request.get(`/api/resize/?file=fjord&width=${testWidth}&height=-1`).expect(400);
+    })
+})
+
+describe("Resize success", () => {
+    it("returns a resized image", () => {
+        expect(async () => {
+            await resize(testImagePath, testFile, testWidth, testHeight, testResizedImage)
+        }).not.toThrow();
     })
 })

@@ -2,7 +2,7 @@
 import express from 'express';
 import path from 'path';
 import { promises as fs } from 'fs';
-import sharp from 'sharp';
+import resize from '../../util/resize';
 
 const image = express.Router();
 
@@ -11,6 +11,7 @@ image.get('/', async (req, res) => {
     const height: number = parseInt(req.query.height as string);
     const file = req.query.file as string;
     const imagePath = path.resolve("assets");
+    console.log(imagePath);
     const resizedPath = path.resolve("assets", "resized");
     const resizedImage = `${resizedPath}/${file}_${width}_${height}.jpg`;
     // * response.status(200).sendFile(`${imagePath}/${file}.jpg`);
@@ -22,21 +23,16 @@ image.get('/', async (req, res) => {
         return res.status(400).send("Invalid height");
     } else if (!file) {
         return res.status(400).send("file mustn't be empty");
-    } else if (!(`${file}.jpg` in (await fs.readdir(`${imagePath}`)))) {
+    } else if (!((await fs.readdir(`${imagePath}`)).find(item => item == `${file}.jpg`))) {
         return res.status(400).send("File does not exist");
     }
 
     if (!(`${file}_${width}_${height}.jpg` in (await fs.readdir(resizedPath)))) {
         await resize(imagePath, file, width, height, resizedImage)
+        //              
     }
 
     res.status(200).sendFile(resizedImage);
 })
-
-async function resize(imagePath: string, file: string, width: number, height: number, resizedImage: string): Promise<void> {
-    await sharp(`${imagePath}/${file}.jpg`)
-        .resize(width, height)
-        .toFile(resizedImage)
-}
 
 export default image;
