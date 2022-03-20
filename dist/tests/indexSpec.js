@@ -20,16 +20,19 @@ it('GET /', () => __awaiter(void 0, void 0, void 0, function* () {
     expect(response.status).toEqual(200);
 }));
 it("GET /api", () => __awaiter(void 0, void 0, void 0, function* () {
-    return yield request.get("/api").expect(200);
+    const response = yield request.get("/api");
+    expect(response.status).toEqual(200);
 }));
 describe("File not found", () => {
     it('returns 400', () => __awaiter(void 0, void 0, void 0, function* () {
-        return yield request.get("/api/resize/?file=test&width=200&height=200").expect(400);
+        const response = yield request.get("/api/resize/?file=test&width=200&height=200");
+        expect(response.status).toEqual(400);
     }));
 });
 describe("Image endpoints", () => {
     it('returns an image', () => __awaiter(void 0, void 0, void 0, function* () {
-        return yield request.get("/api/resize/?file=fjord&width=200&height=400").expect(200);
+        const response = yield request.get("/api/resize/?file=fjord&width=200&height=400");
+        expect(response.status).toEqual(400);
     }));
 });
 describe("Invalid width(NaN)", () => {

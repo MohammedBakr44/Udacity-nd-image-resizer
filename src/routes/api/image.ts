@@ -10,8 +10,7 @@ image.get('/', async (req, res) => {
     const width: number = parseInt(req.query.width as string);
     const height: number = parseInt(req.query.height as string);
     const file = req.query.file as string;
-    const imagePath = path.resolve("assets")
-    console.log(imagePath)
+    const imagePath = path.resolve("assets");
     const resizedPath = path.resolve("assets", "resized");
     const resizedImage = `${resizedPath}/${file}_${width}_${height}.jpg`;
     // * response.status(200).sendFile(`${imagePath}/${file}.jpg`);
@@ -38,7 +37,6 @@ async function resize(imagePath: string, file: string, width: number, height: nu
     await sharp(`${imagePath}/${file}.jpg`)
         .resize(width, height)
         .toFile(resizedImage)
-    // .then(data => { res.status(200).sendFile(data.toString()) })
 }
 
 export default image;
