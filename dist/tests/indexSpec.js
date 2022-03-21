@@ -32,16 +32,16 @@ it("GET /api", () => __awaiter(void 0, void 0, void 0, function* () {
     const response = yield request.get("/api");
     expect(response.status).toEqual(200);
 }));
+describe("Image endpoints", () => {
+    it('returns an image', () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield request.get(`/api/resize/?file=${testFile}&width=${testWidth}&height=${testHeight}`);
+        expect(response.status).toEqual(200);
+    }));
+});
 describe("File not found", () => {
     it('returns 400', () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield request.get(`/api/resize/?file=test&width=${testWidth}&height=${testHeight}`);
         expect(response.status).toEqual(400);
-    }));
-});
-describe("Image endpoints", () => {
-    it('returns an image', () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield request.get(`/api/resize/?file=fjord&width=${testWidth}&height=${testHeight}`);
-        expect(response.status).toEqual(200);
     }));
 });
 describe("Invalid width(NaN)", () => {
@@ -70,7 +70,10 @@ describe("Resize success", () => {
             yield (0, resize_1.default)(testImagePath, testFile, testWidth, testHeight, testResizedImage);
         })).not.toThrow();
     });
-    afterAll(() => {
-        fs_1.default.rmSync(testResizedImage);
-    });
+    afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield fs_1.default.rm(testResizedImage, { recursive: true }, (err) => {
+            console.log(err);
+            return;
+        });
+    }));
 });

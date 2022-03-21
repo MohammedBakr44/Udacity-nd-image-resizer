@@ -11,7 +11,6 @@ image.get('/', async (req, res) => {
     const height: number = parseInt(req.query.height as string);
     const file = req.query.file as string;
     const imagePath = path.resolve("assets");
-    console.log(imagePath);
     const resizedPath = path.resolve("assets", "resized");
     const resizedImage = `${resizedPath}/${file}_${width}_${height}.jpg`;
     // * response.status(200).sendFile(`${imagePath}/${file}.jpg`);

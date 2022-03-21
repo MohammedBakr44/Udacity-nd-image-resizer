@@ -7,10 +7,10 @@ const express_1 = __importDefault(require("express"));
 const index_1 = __importDefault(require("./routes/index"));
 const app = (0, express_1.default)();
 const port = 3000;
-app.get("/", (request, response) => {
-    response.status(200).send("Hello");
+app.get('/', (request, response) => {
+    response.status(200).send('Hello');
 });
-app.use("/api", index_1.default);
+app.use('/api', index_1.default);
 app.listen(port, () => {
     console.log(`Server started at port: ${port}`);
 });

@@ -22,17 +22,20 @@ it("GET /api", async () => {
     expect(response.status).toEqual(200);
 })
 
+
+
+describe("Image endpoints", () => {
+    it('returns an image', async () => {
+        const response = await request.get(`/api/resize/?file=${testFile}&width=${testWidth}&height=${testHeight}`);
+        expect(response.status).toEqual(200);
+    })
+})
+
+
 describe("File not found", () => {
     it('returns 400', async () => {
         const response = await request.get(`/api/resize/?file=test&width=${testWidth}&height=${testHeight}`);
         expect(response.status).toEqual(400);
-    })
-})
-
-describe("Image endpoints", () => {
-    it('returns an image', async () => {
-        const response = await request.get(`/api/resize/?file=fjord&width=${testWidth}&height=${testHeight}`);
-        expect(response.status).toEqual(200);
     })
 })
 
@@ -68,4 +71,12 @@ describe("Resize success", () => {
             await resize(testImagePath, testFile, testWidth, testHeight, testResizedImage)
         }).not.toThrow();
     })
+
+    afterAll(async () => {
+        await fs.rm(testResizedImage, { recursive: true }, (err) => {
+            console.log(err);
+            return;
+        })
+    })
+
 })
