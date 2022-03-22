@@ -26,6 +26,6 @@
 After running the code using `npm run start` or `yarn start` open your browser and type `localhost:3000`, you should see `Hello` on the screen.
 To resize an image use the name along with desired height and width for example
 
-`http://localhost:3000/api/resize/?name=fjord&width=200&height=200`
+`http://localhost:3000/api/resize/?file=fjord&width=200&height=200`
 
 The new resized image will be returned in the browser and it will be saved at `assets/resized` as well.
