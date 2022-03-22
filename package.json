@@ -6,9 +6,9 @@
     "start": "nodemon src/main.ts",
     "test": "yarn build && jasmine",
     "build": "yarn tsc",
-    "lint": "eslint src/*.ts",
-    "lint:f": "eslint src/*.ts --fix",
-    "prettier": "yarn prettier --config .prettierrc --check --write src/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "lint:f": "eslint src/**/*.ts --fix",
+    "prettier": "yarn prettier --config .prettierrc --check --write src/**/*.ts"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
