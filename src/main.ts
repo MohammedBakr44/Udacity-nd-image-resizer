@@ -4,7 +4,7 @@ import routes from './routes/index';
 const app = express();
 const port: number = 3000;
 
-app.get('/', (request: express.Request, response: express.Response) => {
+app.get('/', (request: express.Request, response: express.Response): void => {
     response.status(200).send('Hello');
 });
 

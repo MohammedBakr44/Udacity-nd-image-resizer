@@ -6,7 +6,7 @@ import resize from '../../util/resize';
 
 const image = express.Router();
 
-image.get('/', async (request: express.Request, response: express.Response) => {
+image.get('/', async (request: express.Request, response: express.Response): Promise<unknown> => {
     const width: number = parseInt(request.query.width as string);
     const height: number = parseInt(request.query.height as string);
     const file = request.query.file as string;
