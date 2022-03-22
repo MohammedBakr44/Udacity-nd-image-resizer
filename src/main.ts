@@ -2,9 +2,9 @@ import express from 'express';
 import routes from './routes/index';
 
 const app = express();
-const port = 3000;
+const port: number = 3000;
 
-app.get('/', (request, response) => {
+app.get('/', (request: express.Request, response: express.Response) => {
     response.status(200).send('Hello');
 });
 
